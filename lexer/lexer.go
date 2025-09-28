@@ -6,18 +6,21 @@ import (
 	"github.com/arps18/andromex/token"
 )
 
+// Lexer is responsible for converting input strings into tokens.
 type Lexer struct {
 	input        string
 	pos, readPos int
 	ch           byte
 }
 
+// New creates a new Lexer instance with the provided input string.
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
 	return l
 }
 
+// readChar reads the next character from the input and advances the positions.
 func (l *Lexer) readChar() {
 	if l.readPos >= len(l.input) {
 		l.ch = 0
@@ -28,6 +31,8 @@ func (l *Lexer) readChar() {
 	l.pos = l.readPos
 	l.readPos++
 }
+
+// NextToken retrieves the next token from the input.
 
 func (l *Lexer) NextToken() token.Token {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
@@ -81,6 +86,7 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
+// readIdentifier reads an identifier from the input.
 func (l *Lexer) readIdentifier() string {
 	start := l.pos
 	for unicode.IsLetter(rune(l.ch)) || unicode.IsDigit(rune(l.ch)) || l.ch == '_' {
@@ -89,6 +95,7 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[start:l.pos]
 }
 
+// readNumber reads a number from the input.
 func (l *Lexer) readNumber() string {
 	start := l.pos
 	for unicode.IsDigit(rune(l.ch)) {
